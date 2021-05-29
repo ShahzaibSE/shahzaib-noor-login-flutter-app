@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -9,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -22,7 +25,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Log In'),
+      home: MyHomePage(title: 'Welcome - Shahzaib Noor'),
     );
   }
 }
@@ -62,15 +65,47 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title, style: TextStyle(fontWeight: FontWeight.bold)),
       ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(key: Key('email')),
-            TextField(key: Key('password'))
-          ],)
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: SingleChildScrollView(
+        // padding: const EdgeInsets.only(top: 20.0),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(width:100),
+              Container(
+                width: 300,
+                child: TextField(
+                  key: Key('email'), 
+                  autocorrect: true, 
+                  autofocus: true,
+                ),
+              ),
+              Container(
+                width: 300,
+                child: TextField(
+                  key: Key('password'), 
+                  autocorrect: true, 
+                  autofocus: true,
+                  obscureText: true
+                ),
+                padding: const EdgeInsets.only(bottom: 20.0),
+              ),
+              Container(
+                width: 300,
+                height: 60,
+                padding: const EdgeInsets.only(top:20.0),
+                child: ElevatedButton(
+                  child: Text('Log In'),
+                  onPressed: (){},
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red[400]
+                  )
+                )
+              )
+            ],)
+        ),
+       ) // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
