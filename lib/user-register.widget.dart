@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'homepage.widget.dart';
-import 'user-register.widget.dart';
 
-class UserLogin extends StatefulWidget {
-  const UserLogin({ Key? key }) : super(key: key);
-  static String tag = 'login-page';
+class UserRegister extends StatefulWidget {
+  const UserRegister({ Key? key }) : super(key: key);
+  static String tag = 'register-page';
 
   @override
-  _UserLoginState createState() => _UserLoginState();
+  _UserRegisterState createState() => _UserRegisterState();
 }
 
-class _UserLoginState extends State<UserLogin> {
-  
+class _UserRegisterState extends State<UserRegister> {
   @override
   Widget build(BuildContext context) {
     final logo = Hero(
@@ -21,6 +18,18 @@ class _UserLoginState extends State<UserLogin> {
         radius: 48.0,
         child: Image.asset('assets/logo.png')
       )
+    );
+    //
+    final fullname = TextFormField(
+      keyboardType: TextInputType.name,
+      autofocus: false,
+      decoration: InputDecoration(
+        hintText: 'James',
+        contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(32.0)
+        )
+      ),
     );
     //
     final email = TextFormField(
@@ -48,7 +57,7 @@ class _UserLoginState extends State<UserLogin> {
       ),
     );
     //
-    final loginBtn = Padding(
+    final signUpBtn = Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Material(
         shadowColor: Colors.lightBlueAccent.shade100,
@@ -56,22 +65,27 @@ class _UserLoginState extends State<UserLogin> {
         child: MaterialButton(
           minWidth: 200.0,
           height: 42.0,
-          onPressed: (){ Navigator.of(context).pushNamed(HomePage.tag); },
+          onPressed: (){},
           color: Colors.lightBlueAccent,
-          child: Text('Log In', style: TextStyle(color: Colors.white)),
+          child: Text('Sign Up', style: TextStyle(color: Colors.white)),
         ),
       )
     );
-    //
-    final forgetLabel = TextButton(
-      child: Text('Don\'t have an account?', style: TextStyle(
-          color: Colors.black54
-        )
-      ),
-      onPressed: (){ Navigator.of(context).pushNamed(UserRegister.tag); }
-    );
+
     //
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        shadowColor: Colors.transparent,
+        actions: [
+            IconButton(onPressed: (){ 
+              Navigator.of(context).pop();
+            }, 
+              icon: Icon(Icons.cancel)
+            )
+          ],
+      ),
       backgroundColor: Colors.white,
       body: Center(
           child: ListView(
@@ -79,13 +93,14 @@ class _UserLoginState extends State<UserLogin> {
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             children: <Widget>[
               logo,
-              const SizedBox(height:48.0),
+              const SizedBox(height:28.0),
+              fullname,
+              const SizedBox(height: 8.0),
               email,
               const SizedBox(height: 8.0),
               password,
               const SizedBox(height: 24.0),
-              loginBtn,
-              forgetLabel
+              signUpBtn,
             ],
           )
         )
