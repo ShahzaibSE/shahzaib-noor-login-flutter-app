@@ -50,7 +50,19 @@ class HomePage extends StatelessWidget {
         children: <Widget>[
           alucard,
           greetingLabel,
-          aboutUser
+          aboutUser,
+          const SizedBox(height: 25),
+          Stack(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.topCenter,
+                child: IconButton(onPressed: (){
+                    Navigator.of(context).pop();
+                  }, icon: Icon(Icons.exit_to_app, color: Colors.white, size: 30),
+                ),
+              )
+            ]
+          )
         ]
       ),
     ); 

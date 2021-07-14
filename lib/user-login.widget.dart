@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'homepage.widget.dart';
 import 'user-register.widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserLogin extends StatefulWidget {
   const UserLogin({ Key? key }) : super(key: key);
@@ -14,6 +15,9 @@ class _UserLoginState extends State<UserLogin> {
   
   @override
   Widget build(BuildContext context) {
+    final TextEditingController emailcontroller = TextEditingController();
+    final TextEditingController passwordcontroller = TextEditingController();
+    //
     final logo = Hero(
       tag: 'hero', 
       child: CircleAvatar(
@@ -24,9 +28,9 @@ class _UserLoginState extends State<UserLogin> {
     );
     //
     final email = TextFormField(
+      controller: emailcontroller,
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
-      initialValue: 'abc@gmail.com',
       decoration: InputDecoration(
         hintText: 'Email',
         contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -37,6 +41,7 @@ class _UserLoginState extends State<UserLogin> {
     );
     //
     final password = TextFormField(
+      controller: passwordcontroller,
       autofocus: false,
       obscureText: true,
       decoration: InputDecoration(
@@ -47,6 +52,29 @@ class _UserLoginState extends State<UserLogin> {
         )
       ),
     );
+    // Signing in firebase account //
+    login() async{
+      final String email = emailcontroller.text;
+      final String password = passwordcontroller.text;
+      FirebaseAuth auth = FirebaseAuth.instance;
+      try {
+        UserCredential userCredential = await auth.signInWithEmailAndPassword(
+          email: email,
+          password: password
+        );
+        print('Signed in successfully');
+        print(userCredential.user);
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          print('No user found for that email.');
+        } else if (e.code == 'wrong-password') {
+          print('Wrong password provided for that user.');
+        }
+      }
+      emailcontroller.clear();
+      passwordcontroller.clear();
+      Navigator.of(context).pushNamed(HomePage.tag); 
+    }
     //
     final loginBtn = Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -56,7 +84,7 @@ class _UserLoginState extends State<UserLogin> {
         child: MaterialButton(
           minWidth: 200.0,
           height: 42.0,
-          onPressed: (){ Navigator.of(context).pushNamed(HomePage.tag); },
+          onPressed: login,
           color: Colors.lightBlueAccent,
           child: Text('Log In', style: TextStyle(color: Colors.white)),
         ),

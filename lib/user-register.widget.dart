@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserRegister extends StatefulWidget {
   const UserRegister({ Key? key }) : super(key: key);
@@ -11,6 +13,11 @@ class UserRegister extends StatefulWidget {
 class _UserRegisterState extends State<UserRegister> {
   @override
   Widget build(BuildContext context) {
+    // Controllers. 
+    final TextEditingController fullnamecontroller = TextEditingController();
+    final TextEditingController emailcontroller = TextEditingController();
+    final TextEditingController passwordcontroller = TextEditingController();
+    //
     final logo = Hero(
       tag: 'hero', 
       child: CircleAvatar(
@@ -21,10 +28,11 @@ class _UserRegisterState extends State<UserRegister> {
     );
     //
     final fullname = TextFormField(
+      controller: fullnamecontroller,
       keyboardType: TextInputType.name,
       autofocus: false,
       decoration: InputDecoration(
-        hintText: 'James',
+        hintText: 'Full Name',
         contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(32.0)
@@ -33,9 +41,9 @@ class _UserRegisterState extends State<UserRegister> {
     );
     //
     final email = TextFormField(
+      controller: emailcontroller,
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
-      initialValue: 'abc@gmail.com',
       decoration: InputDecoration(
         hintText: 'Email',
         contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -46,6 +54,7 @@ class _UserRegisterState extends State<UserRegister> {
     );
     //
     final password = TextFormField(
+      controller: passwordcontroller,
       autofocus: false,
       obscureText: true,
       decoration: InputDecoration(
@@ -56,7 +65,37 @@ class _UserRegisterState extends State<UserRegister> {
         )
       ),
     );
-    //
+    // -- Registering on Firebase -- //
+    register() async{
+      final String fullname = fullnamecontroller.text;
+      final String email = emailcontroller.text;
+      final String password = passwordcontroller.text;
+      //
+      try {
+        FirebaseAuth auth = FirebaseAuth.instance;
+        // await auth.createUserWithEmailAndPassword(email: email, password: password);
+        UserCredential userCrediential = await auth.createUserWithEmailAndPassword(
+          email: email,
+          password: password
+        );
+        print('User created on firebase');
+        print(userCrediential.user);
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          print('The account already exists for that email.');
+        }
+      } catch (e) {
+        print('User could not be created');
+        print(e);
+      }
+      fullnamecontroller.clear();
+      emailcontroller.clear();
+      passwordcontroller.clear();
+      Navigator.of(context).pop();
+    }
+
     final signUpBtn = Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Material(
@@ -65,9 +104,7 @@ class _UserRegisterState extends State<UserRegister> {
         child: MaterialButton(
           minWidth: 200.0,
           height: 42.0,
-          onPressed: (){
-              Navigator.of(context).pop();
-          },
+          onPressed: register,
           color: Colors.lightBlueAccent,
           child: Text('Sign Up', style: TextStyle(color: Colors.white)),
         ),
