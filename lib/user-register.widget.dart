@@ -65,7 +65,9 @@ class _UserRegisterState extends State<UserRegister> {
         child: MaterialButton(
           minWidth: 200.0,
           height: 42.0,
-          onPressed: (){},
+          onPressed: (){
+              Navigator.of(context).pop();
+          },
           color: Colors.lightBlueAccent,
           child: Text('Sign Up', style: TextStyle(color: Colors.white)),
         ),
